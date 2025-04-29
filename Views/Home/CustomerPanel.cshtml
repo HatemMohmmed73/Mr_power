@@ -1,0 +1,49 @@
+﻿@model IEnumerable<MR_power.Models.Customer>
+
+@{
+    ViewData["Title"] = "Customer Panel";
+}
+
+<h1>Customer Panel</h1>
+
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
+</p>
+
+
+<!-- Search Form -->
+<form method="get" asp-action="CustomerPanel">
+    <input type="text" name="searchPhone" placeholder="Search by Phone Number" class="form-control" />
+    <button type="submit" class="btn btn-primary mt-2">Search</button>
+</form>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.FullName)</th>
+            <th>@Html.DisplayNameFor(model => model.Phone)</th>
+            <th>@Html.DisplayNameFor(model => model.Email)</th>
+            <th>@Html.DisplayNameFor(model => model.Address)</th>
+            <th>@Html.DisplayNameFor(model => model.CreatedAt)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => item.FullName)</td>
+                <td>@Html.DisplayFor(m => item.Phone)</td>
+                <td>@Html.DisplayFor(m => item.Email)</td>
+                <td>@Html.DisplayFor(m => item.Address)</td>
+                <td>@Html.DisplayFor(m => item.CreatedAt)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CustomerId">Edit</a> 
+                    <a asp-action="Delete" asp-route-id="@item.CustomerId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,144 @@
+﻿@model MR_power.DTOs.CreateBillDTO
+@{
+    ViewData["Title"] = "Create Bill";
+    Layout = "_Layout";
+}
+
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Create New Bill</h1>
+        <a href="@Url.Action("BillPanel")" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+            Back to Bill Panel
+        </a>
+    </div>
+
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6">
+            <h2 class="text-lg leading-6 font-medium text-gray-900">Bill Information</h2>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
+            <form asp-action="CreateBill" method="post" class="space-y-6">
+                <div asp-validation-summary="ModelOnly" class="text-red-600"></div>
+
+                <div>
+                    <label asp-for="CustomerId" class="block text-sm font-medium text-gray-700">Customer</label>
+                    <select asp-for="CustomerId" asp-items="@ViewBag.Customers" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <option value="">Select a customer</option>
+                    </select>
+                    <span asp-validation-for="CustomerId" class="text-red-600"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Date" class="block text-sm font-medium text-gray-700">Date</label>
+                    <input asp-for="Date" type="date" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" />
+                    <span asp-validation-for="Date" class="text-red-600"></span>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                    <div>
+                        <label asp-for="DiscountPercentage" class="block text-sm font-medium text-gray-700">Bill Discount (%)</label>
+                        <input asp-for="DiscountPercentage" type="number" step="0.01" min="0" max="100" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" />
+                        <span asp-validation-for="DiscountPercentage" class="text-red-600"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="MonthlyInterestRate" class="block text-sm font-medium text-gray-700">Monthly Interest (%)</label>
+                        <input asp-for="MonthlyInterestRate" type="number" step="0.01" min="0" max="100" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" />
+                        <span asp-validation-for="MonthlyInterestRate" class="text-red-600"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="AnnualInterestRate" class="block text-sm font-medium text-gray-700">Annual Interest (%)</label>
+                        <input asp-for="AnnualInterestRate" type="number" step="0.01" min="0" max="100" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" />
+                        <span asp-validation-for="AnnualInterestRate" class="text-red-600"></span>
+                    </div>
+                </div>
+
+                <div id="items-container">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Items</h3>
+                    <div class="space-y-4">
+                        @for (int i = 0; i < Model.Items.Count; i++)
+                        {
+                            <div class="flex space-x-4 items-end">
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-gray-700">Item</label>
+                                    <select asp-for="Items[i].StockItemId" asp-items="@ViewBag.StockItems" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                        <option value="">Select an item</option>
+                                    </select>
+                                    <span asp-validation-for="Items[i].StockItemId" class="text-red-600"></span>
+                                </div>
+                                <div class="w-32">
+                                    <label class="block text-sm font-medium text-gray-700">Quantity</label>
+                                    <input asp-for="Items[i].Quantity" type="number" min="1" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" />
+                                    <span asp-validation-for="Items[i].Quantity" class="text-red-600"></span>
+                                </div>
+                                <div class="w-32">
+                                    <label class="block text-sm font-medium text-gray-700">Unit Price</label>
+                                    <input asp-for="Items[i].UnitPrice" type="number" step="0.01" min="0" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" />
+                                    <span asp-validation-for="Items[i].UnitPrice" class="text-red-600"></span>
+                                </div>
+                                <div class="w-32">
+                                    <label class="block text-sm font-medium text-gray-700">Discount (%)</label>
+                                    <input asp-for="Items[i].DiscountPercentage" type="number" step="0.01" min="0" max="100" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" />
+                                    <span asp-validation-for="Items[i].DiscountPercentage" class="text-red-600"></span>
+                                </div>
+                                <button type="button" class="text-red-600 hover:text-red-900" onclick="removeItem(this)">Remove</button>
+                            </div>
+                        }
+                    </div>
+                    <button type="button" onclick="addItem()" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                        Add Item
+                    </button>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                        Create Bill
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+        function addItem() {
+            const container = document.getElementById('items-container');
+            const itemCount = container.querySelectorAll('select[name*="Items"]').length;
+            const newItem = `
+                <div class="flex space-x-4 items-end">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700">Item</label>
+                        <select name="Items[${itemCount}].StockItemId" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                            <option value="">Select an item</option>
+                            @foreach (var item in ViewBag.StockItems)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="w-32">
+                        <label class="block text-sm font-medium text-gray-700">Quantity</label>
+                        <input name="Items[${itemCount}].Quantity" type="number" min="1" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" />
+                    </div>
+                    <div class="w-32">
+                        <label class="block text-sm font-medium text-gray-700">Unit Price</label>
+                        <input name="Items[${itemCount}].UnitPrice" type="number" step="0.01" min="0" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" />
+                    </div>
+                    <div class="w-32">
+                        <label class="block text-sm font-medium text-gray-700">Discount (%)</label>
+                        <input name="Items[${itemCount}].DiscountPercentage" type="number" step="0.01" min="0" max="100" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" />
+                    </div>
+                    <button type="button" class="text-red-600 hover:text-red-900" onclick="removeItem(this)">Remove</button>
+                </div>
+            `;
+            container.querySelector('.space-y-4').insertAdjacentHTML('beforeend', newItem);
+        }
+
+        function removeItem(button) {
+            button.closest('.flex').remove();
+        }
+    </script>
+}

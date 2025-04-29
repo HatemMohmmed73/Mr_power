@@ -1,0 +1,159 @@
+﻿@model MR_power.Models.Bill
+
+@{
+    Layout = null; // ❌ Remove all layouts (No navbar, No footer)
+    ViewData["Title"] = "PrintInvoice";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 50px 20px 20px 20px; /* Space at the top for company details */
+    }
+
+    .invoice-container {
+        width: 90%;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .invoice-header {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .invoice-details {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+        .invoice-details td {
+            padding: 5px;
+        }
+
+    .invoice-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        border: 2px solid black; /* ✅ Keeps the outer border */
+    }
+
+        .invoice-table th {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 2px solid black; /* ✅ Only underline headers */
+        }
+
+        .invoice-table td {
+            padding: 8px;
+            text-align: center;
+            border-left: 1px solid black; /* ✅ Keeps vertical lines */
+            border-right: 1px solid black;
+        }
+
+    .total-section {
+        text-align: right;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    .signature-section {
+        margin-top: 30px;
+    }
+</style>
+
+<!-- ✅ Auto Print & Close Window -->
+
+<script>
+    window.onload = function () {
+        window.print();
+        setTimeout(() => {
+            window.close();
+            window.opener.location.href = "/Home/CreateBill"; // ✅ Redirect to CreateBill
+        }, 2000);
+    };
+</script>
+
+
+<div class="invoice-container">
+    <div class="invoice-header">
+       
+    </div>
+
+    <!-- Customer Details -->
+    <table class="invoice-details">
+        <tr>
+            <td><strong>DATE:</strong>   @Model.BillDate.ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr>
+            <td><strong>NAME:</strong>   @Model.Customer.FullName</td>
+        </tr>
+        <tr>
+            <td><strong>MODEL:</strong> @Model.Model</td>
+        </tr>
+        <tr>
+            <td><strong>VIN:</strong>@Model.VIN</td>
+        </tr>
+        <tr>
+           <td><strong>PHONE:</strong>   @Model.Customer.Phone</td>
+        </tr>
+    </table>
+
+    <!-- Invoice Items Table -->
+    <table class="invoice-table">
+        <thead>
+            <tr>
+                <th>NO.</th>
+                <th>DESCRIPTION</th>
+                <th>UNIT PRICE (OMR)</th>
+                <th>QTY</th>
+                <th>PRICE (OMR)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int index = 1;
+                int totalRows = 6; // ✅ Default number of rows
+                int filledRows = Model.BillItems.Count;
+                int emptyRows = totalRows - filledRows;
+
+                foreach (var item in Model.BillItems)
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@item.Stook.ItemName</td>
+                        <td>@item.UnitPrice.ToString("F3")</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.LineTotal.ToString("F3")</td>
+                    </tr>
+                    index++;
+                }
+
+                // ✅ Add empty rows to maintain default size
+                for (int i = 0; i < emptyRows; i++)
+                {
+                    <tr>
+                        <td>&nbsp;</td> <!-- Empty columns for spacing -->
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <!-- Total Amount -->
+    <div class="total-section">
+        <strong>Total:</strong> @Model.TotalAmount.ToString("F3") OMR
+    </div>
+
+    <!-- Signature -->
+    <div class="signature-section">
+        <strong>SIGNATURE:</strong> ____________________________
+    </div>
+</div>

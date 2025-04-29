@@ -1,0 +1,52 @@
+﻿@using MR_power.Models
+@model IEnumerable<Stook>
+
+@{
+    ViewData["Title"] = "Stock Panel";
+}
+
+<h1>Stock Panel</h1>
+
+<p>
+    <a asp-action="CreateStock" class="btn btn-success">Create New Stock Item</a>
+</p>
+
+<!-- Search Form -->
+<form method="get" asp-action="StockPanel">
+    <input type="text" name="searchItem" placeholder="Search by Item Name" class="form-control" />
+    <button type="submit" class="btn btn-primary mt-2">Search</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Name)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Description)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Quantity)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().UnitPrice)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Category)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Sku)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().CreatedAt)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                <td>@Html.DisplayFor(modelItem => item.UnitPrice) OMR</td>
+                <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                <td>@Html.DisplayFor(modelItem => item.Sku)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+                <td>
+                    <a asp-action="EditStock" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="DetailsStock" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="DeleteStock" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
